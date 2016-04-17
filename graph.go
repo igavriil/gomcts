@@ -17,9 +17,9 @@ func GraphSuccessors(g Graph, s State) []State {
 	return successors
 }
 
-func UninformedSearch(g Graph, f Frontier) *Node {
+func UninformedSearch(g Graph, f Frontier) *GraphNode {
 	state := g.InitialState()
-	node := &Node{State: state}
+	node := &GraphNode{State: state}
 	if g.GoalTest(state) {
 		return node
 	}
@@ -28,7 +28,7 @@ func UninformedSearch(g Graph, f Frontier) *Node {
 	queued := make(map[State]bool)
 
 	for f.Len() > 0 {
-		node = f.Pop().(*Node)
+		node = f.Pop().(*GraphNode)
 		state = (*node).State
 		explored[state] = true
 		for _, action := range g.Actions(state) {
@@ -46,4 +46,5 @@ func UninformedSearch(g Graph, f Frontier) *Node {
 			}
 		}
 	}
+	return nil
 }
