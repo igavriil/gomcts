@@ -67,3 +67,7 @@ func (b Board) Actions(t Tile) []BoardAction {
 	}
 	return actions
 }
+
+func (b Board) Transition(t Tile, a BoardAction) Tile {
+	return a.to
+}

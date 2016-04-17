@@ -49,6 +49,22 @@ func sliceToBoardActionMap(s []BoardAction) map[BoardAction]int {
 	return m
 }
 
+func TestTransition(t *testing.T) {
+	b := *NewBoard(2)
+	expected := Tile{0, 1}
+	actual := b.Transition(
+		Tile{0, 0},
+		BoardAction{Tile{0, 0}, Tile{0, 1}},
+	)
+	equal := reflect.DeepEqual(actual, expected)
+	if !equal {
+		t.Error(
+			"expected", expected,
+			"got", actual,
+		)
+	}
+}
+
 func TestNeighbors(t *testing.T) {
 	b := *NewBoard(2)
 	expected := []Tile{Tile{0, 1}, Tile{1, 0}}
