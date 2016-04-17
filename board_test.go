@@ -197,3 +197,23 @@ func TestRemoveNeighbor(t *testing.T) {
 		)
 	}
 }
+
+var distanceTest = []struct {
+	tile     Tile
+	goal     Tile
+	distance int
+}{
+	{Tile{0, 0}, Tile{0, 0}, 0},
+	{Tile{1, 1}, Tile{1, 2}, 1},
+	{Tile{1, 1}, Tile{2, 1}, 1},
+	{Tile{2, 3}, Tile{5, 4}, 4},
+}
+
+func TestManhattanDisact(t *testing.T) {
+	for _, tt := range distanceTest {
+		s := tt.tile.ManhattanDistance(tt.goal)
+		if s != tt.distance {
+			t.Errorf("%v.ManhattanDistance(%v)=>%v, want %v", tt.tile, tt.goal, s, tt.distance)
+		}
+	}
+}

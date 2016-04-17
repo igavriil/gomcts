@@ -6,7 +6,7 @@ type Tile struct {
 	i, j int
 }
 
-func (t Tile) Distance(g Tile) int {
+func (t Tile) ManhattanDistance(g Tile) int {
 	return Abs(t.i-g.i) + Abs(t.j-g.j)
 }
 
@@ -96,7 +96,7 @@ func (b Board) StepCost(s State, a Action) (int, error) {
 	if t != m.from {
 		return 0, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, m.from)
 	}
-	return m.from.Distance(m.to), nil
+	return m.from.ManhattanDistance(m.to), nil
 }
 
 func (b BoardProblem) InitialState() State {
