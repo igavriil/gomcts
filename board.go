@@ -6,6 +6,10 @@ type Tile struct {
 	i, j int
 }
 
+func (t Tile) Distance(g Tile) int {
+	return Abs(t.i-g.i) + Abs(t.j-g.j)
+}
+
 type BoardAction struct {
 	from Tile
 	to   Tile
@@ -13,8 +17,10 @@ type BoardAction struct {
 
 type Board map[Tile]map[Tile]int
 
-func (t Tile) Distance(g Tile) int {
-	return Abs(t.i-g.i) + Abs(t.j-g.j)
+type BoardProblem struct {
+	Board
+	StartTile Tile
+	GoalTile  Tile
 }
 
 func NewBoard(dimension int) *Board {
@@ -86,4 +92,12 @@ func (b Board) StepCost(t Tile, a BoardAction) (int, error) {
 		return 0, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, a.from)
 	}
 	return a.from.Distance(a.to), nil
+}
+
+func (b BoardProblem) InitialState() Tile {
+	return b.StartTile
+}
+
+func (b BoardProblem) GoalTest(t Tile) bool {
+	return b.GoalTile == t
 }
