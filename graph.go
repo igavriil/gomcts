@@ -39,3 +39,7 @@ func UninformedSearch(g Graph, f Frontier) *GraphNode {
 	}
 	return nil
 }
+
+func AstarSearch(g Graph) *GraphNode {
+	return nil
+}
