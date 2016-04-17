@@ -15,7 +15,7 @@ func TestBfs(t *testing.T) {
 	f := Queue{}
 	solution := UninformedSearch(p, &f)
 
-	if solution == nil {
+	if solution.State != p.GoalTile {
 		t.Error(
 			"expected to found solution",
 		)
@@ -54,7 +54,7 @@ func TestDfs(t *testing.T) {
 	f := Stack{}
 	solution := UninformedSearch(p, &f)
 
-	if solution == nil {
+	if solution.State != p.GoalTile {
 		t.Error(
 			"expected to found solution",
 		)
@@ -79,6 +79,33 @@ func TestDfs(t *testing.T) {
 	if solution != nil {
 		t.Error(
 			"expected no solution",
+		)
+	}
+}
+
+func TestTrivialSolution(t *testing.T) {
+	b := *NewBoard(5)
+	p := BoardProblem{
+		Board:     b,
+		StartTile: Tile{2, 2},
+		GoalTile:  Tile{2, 2},
+	}
+	f := Stack{}
+	solution := UninformedSearch(p, &f)
+
+	if solution.State != p.GoalTile {
+		t.Error(
+			"expected to found solution",
+		)
+	}
+
+	expectedCost := 0
+	actualCost := solution.PathCost
+	equal := reflect.DeepEqual(actualCost, expectedCost)
+	if !equal {
+		t.Error(
+			"expected path cost", expectedCost,
+			"got path cost", actualCost,
 		)
 	}
 }
