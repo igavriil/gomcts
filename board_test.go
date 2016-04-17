@@ -22,11 +22,17 @@ func TestNewBoard(t *testing.T) {
 	}
 }
 
-func TestNeighbors(t *testing.T) {
+func TestActions(t *testing.T) {
 	b := *NewBoard(2)
-	expected := []Tile{Tile{0, 1}, Tile{1, 0}}
-	actual := b.Neighbors(Tile{0, 0})
-	equal := reflect.DeepEqual(sliceToMap(actual), sliceToMap(expected))
+	expected := []BoardAction{
+		BoardAction{Tile{0, 0}, Tile{0, 1}},
+		BoardAction{Tile{0, 0}, Tile{1, 0}},
+	}
+	actual := b.Actions(Tile{0, 0})
+	equal := reflect.DeepEqual(
+		sliceToBoardActionMap(actual),
+		sliceToBoardActionMap(expected),
+	)
 	if !equal {
 		t.Error(
 			"expected", expected,
@@ -35,7 +41,31 @@ func TestNeighbors(t *testing.T) {
 	}
 }
 
-func sliceToMap(s []Tile) map[Tile]int {
+func sliceToBoardActionMap(s []BoardAction) map[BoardAction]int {
+	m := make(map[BoardAction]int)
+	for _, v := range s {
+		m[v] = 1
+	}
+	return m
+}
+
+func TestNeighbors(t *testing.T) {
+	b := *NewBoard(2)
+	expected := []Tile{Tile{0, 1}, Tile{1, 0}}
+	actual := b.Neighbors(Tile{0, 0})
+	equal := reflect.DeepEqual(
+		sliceToTileMap(actual),
+		sliceToTileMap(expected),
+	)
+	if !equal {
+		t.Error(
+			"expected", expected,
+			"got", actual,
+		)
+	}
+}
+
+func sliceToTileMap(s []Tile) map[Tile]int {
 	m := make(map[Tile]int)
 	for _, v := range s {
 		m[v] = 1

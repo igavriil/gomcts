@@ -4,6 +4,11 @@ type Tile struct {
 	i, j int
 }
 
+type BoardAction struct {
+	from Tile
+	to   Tile
+}
+
 type Board map[Tile]map[Tile]int
 
 func NewBoard(dimension int) *Board {
@@ -53,4 +58,12 @@ func (b Board) Neighbors(t Tile) []Tile {
 		neighbors = append(neighbors, n)
 	}
 	return neighbors
+}
+
+func (b Board) Actions(t Tile) []BoardAction {
+	var actions []BoardAction
+	for _, n := range b.Neighbors(t) {
+		actions = append(actions, BoardAction{t, n})
+	}
+	return actions
 }
