@@ -72,32 +72,37 @@ func (b Board) Neighbors(t Tile) []Tile {
 	return neighbors
 }
 
-func (b Board) Actions(t Tile) []BoardAction {
-	var actions []BoardAction
+func (b Board) Actions(s State) []Action {
+	t := s.(Tile)
+	var actions []Action
 	for _, n := range b.Neighbors(t) {
 		actions = append(actions, BoardAction{t, n})
 	}
 	return actions
 }
 
-func (b Board) Transition(t Tile, a BoardAction) (Tile, error) {
-	if t != a.from {
-		return t, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, a.from)
+func (b Board) Transition(s State, a Action) (State, error) {
+	t := s.(Tile)
+	m := a.(BoardAction)
+	if t != m.from {
+		return t, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, m.from)
 	}
-	return a.to, nil
+	return m.to, nil
 }
 
-func (b Board) StepCost(t Tile, a BoardAction) (int, error) {
-	if t != a.from {
-		return 0, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, a.from)
+func (b Board) StepCost(s State, a Action) (int, error) {
+	t := s.(Tile)
+	m := a.(BoardAction)
+	if t != m.from {
+		return 0, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, m.from)
 	}
-	return a.from.Distance(a.to), nil
+	return m.from.Distance(m.to), nil
 }
 
-func (b BoardProblem) InitialState() Tile {
+func (b BoardProblem) InitialState() State {
 	return b.StartTile
 }
 
-func (b BoardProblem) GoalTest(t Tile) bool {
-	return b.GoalTile == t
+func (b BoardProblem) GoalTest(s State) bool {
+	return b.GoalTile == s.(Tile)
 }

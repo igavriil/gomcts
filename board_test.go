@@ -24,14 +24,14 @@ func TestNewBoard(t *testing.T) {
 
 func TestActions(t *testing.T) {
 	b := *NewBoard(2)
-	expected := []BoardAction{
+	expected := []Action{
 		BoardAction{Tile{0, 0}, Tile{0, 1}},
 		BoardAction{Tile{0, 0}, Tile{1, 0}},
 	}
 	actual := b.Actions(Tile{0, 0})
 	equal := reflect.DeepEqual(
-		sliceToBoardActionMap(actual),
-		sliceToBoardActionMap(expected),
+		sliceToActionMap(actual),
+		sliceToActionMap(expected),
 	)
 	if !equal {
 		t.Error(
@@ -41,8 +41,8 @@ func TestActions(t *testing.T) {
 	}
 }
 
-func sliceToBoardActionMap(s []BoardAction) map[BoardAction]int {
-	m := make(map[BoardAction]int)
+func sliceToActionMap(s []Action) map[Action]int {
+	m := make(map[Action]int)
 	for _, v := range s {
 		m[v] = 1
 	}
