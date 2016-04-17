@@ -11,7 +11,7 @@ type Game interface {
 	Utility(s State, p Player) int
 }
 
-func Successors(g Game, s State) []State {
+func GameSuccessors(g Game, s State) []State {
 	successors := make([]State, len(g.Actions(s)))
 	for _, a := range g.Actions(s) {
 		child := g.Result(s, a)
@@ -28,14 +28,14 @@ func MinMax(g Game, s State, depth int) int {
 	}
 	if p.IsMax() {
 		max := math.MinInt64
-		for _, child := range Successors(g, s) {
+		for _, child := range GameSuccessors(g, s) {
 			v := MinMax(g, child, depth-1)
 			max = Max(max, v)
 		}
 		return max
 	} else {
 		min := math.MaxInt64
-		for _, child := range Successors(g, s) {
+		for _, child := range GameSuccessors(g, s) {
 			v := MinMax(g, child, depth-1)
 			min = Min(min, v)
 		}
@@ -51,7 +51,7 @@ func AlphaBeta(g Game, s State, depth int, alpha int, beta int) int {
 	}
 	if p.IsMax() {
 		max := math.MinInt64
-		for _, child := range Successors(g, s) {
+		for _, child := range GameSuccessors(g, s) {
 			max = Max(max, AlphaBeta(g, child, depth-1, alpha, beta))
 			alpha := Max(alpha, max)
 			if beta <= alpha {
@@ -61,7 +61,7 @@ func AlphaBeta(g Game, s State, depth int, alpha int, beta int) int {
 		return max
 	} else {
 		min := math.MaxInt64
-		for _, child := range Successors(g, s) {
+		for _, child := range GameSuccessors(g, s) {
 			min = Min(min, AlphaBeta(g, child, depth-1, alpha, beta))
 			beta := Min(beta, min)
 			if beta <= alpha {
