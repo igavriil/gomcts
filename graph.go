@@ -8,15 +8,6 @@ type Graph interface {
 	StepCost(s State, a Action) (int, error)
 }
 
-func GraphSuccessors(g Graph, s State) []State {
-	successors := make([]State, len(g.Actions(s)))
-	for _, a := range g.Actions(s) {
-		child, _ := g.Transition(s, a)
-		successors = append(successors, child)
-	}
-	return successors
-}
-
 func UninformedSearch(g Graph, f Frontier) *GraphNode {
 	state := g.InitialState()
 	node := &GraphNode{State: state}
