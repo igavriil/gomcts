@@ -52,7 +52,7 @@ func sliceToBoardActionMap(s []BoardAction) map[BoardAction]int {
 func TestTransition(t *testing.T) {
 	b := *NewBoard(2)
 	expected := Tile{0, 1}
-	actual := b.Transition(
+	actual, error := b.Transition(
 		Tile{0, 0},
 		BoardAction{Tile{0, 0}, Tile{0, 1}},
 	)
@@ -61,6 +61,54 @@ func TestTransition(t *testing.T) {
 		t.Error(
 			"expected", expected,
 			"got", actual,
+		)
+	}
+	if error != nil {
+		t.Error(
+			"expected no error",
+			"got", error,
+		)
+	}
+
+	_, error = b.Transition(
+		Tile{1, 1},
+		BoardAction{Tile{0, 0}, Tile{0, 1}},
+	)
+	if error == nil {
+		t.Error(
+			"expected error",
+		)
+	}
+}
+
+func TestStepCost(t *testing.T) {
+	b := *NewBoard(2)
+	expected := 1
+	actual, error := b.StepCost(
+		Tile{0, 0},
+		BoardAction{Tile{0, 0}, Tile{0, 1}},
+	)
+	equal := reflect.DeepEqual(actual, expected)
+	if !equal {
+		t.Error(
+			"expected", expected,
+			"got", actual,
+		)
+	}
+	if error != nil {
+		t.Error(
+			"expected no error",
+			"got", error,
+		)
+	}
+
+	_, error = b.StepCost(
+		Tile{1, 1},
+		BoardAction{Tile{0, 0}, Tile{0, 1}},
+	)
+	if error == nil {
+		t.Error(
+			"expected error",
 		)
 	}
 }

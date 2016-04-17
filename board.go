@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type Tile struct {
 	i, j int
 }
@@ -10,6 +12,10 @@ type BoardAction struct {
 }
 
 type Board map[Tile]map[Tile]int
+
+func (t Tile) Distance(g Tile) int {
+	return Abs(t.i-g.i) + Abs(t.j-g.j)
+}
 
 func NewBoard(dimension int) *Board {
 	b := make(Board)
@@ -68,6 +74,16 @@ func (b Board) Actions(t Tile) []BoardAction {
 	return actions
 }
 
-func (b Board) Transition(t Tile, a BoardAction) Tile {
-	return a.to
+func (b Board) Transition(t Tile, a BoardAction) (Tile, error) {
+	if t != a.from {
+		return t, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, a.from)
+	}
+	return a.to, nil
+}
+
+func (b Board) StepCost(t Tile, a BoardAction) (int, error) {
+	if t != a.from {
+		return 0, fmt.Errorf("BoardAction: state and action's from missmatch %v -%v", t, a.from)
+	}
+	return a.from.Distance(a.to), nil
 }

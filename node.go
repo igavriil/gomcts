@@ -19,7 +19,8 @@ type GraphNode struct {
 }
 
 func (n GraphNode) ChildNode(g Graph, a Action) *GraphNode {
-	s := g.Transition(n.State, a)
-	c := n.PathCost + g.StepCost(n.State, a)
+	s, _ := g.Transition(n.State, a)
+	stepCost, _ := g.StepCost(n.State, a)
+	c := n.PathCost + stepCost
 	return &GraphNode{s, &n, a, c}
 }
