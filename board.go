@@ -106,3 +106,7 @@ func (b BoardProblem) InitialState() State {
 func (b BoardProblem) GoalTest(s State) bool {
 	return b.GoalTile == s.(Tile)
 }
+
+func (b BoardProblem) Heuristic(s State) int {
+	return b.GoalTile.ManhattanDistance(s.(Tile))
+}
