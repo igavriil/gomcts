@@ -59,11 +59,9 @@ func AstarSearch(g ProblemSpecificGraph, pq PriorityQueue) *GraphNode {
 	}
 	heap.Push(&pq, item)
 	explored := make(map[State]bool)
-	itemList := make(map[State]*Item)
-	queued := make(map[State]bool)
+	queued := make(map[State]*Item)
 
-	queued[state] = true
-	itemList[state] = item
+	queued[state] = item
 
 	for pq.Len() > 0 {
 		item := heap.Pop(&pq).(*Item)
@@ -72,7 +70,6 @@ func AstarSearch(g ProblemSpecificGraph, pq PriorityQueue) *GraphNode {
 
 		explored[state] = true
 		delete(queued, state)
-		delete(itemList, state)
 		for _, action := range g.Actions(state) {
 			childNode := node.ChildNode(g, action)
 			childState := childNode.State
@@ -84,20 +81,18 @@ func AstarSearch(g ProblemSpecificGraph, pq PriorityQueue) *GraphNode {
 				value:    childNode,
 				priority: childNode.PathCost + g.Heuristic(childState),
 			}
-			if _, e := explored[childState]; !e {
-				if _, q := queued[childState]; q {
-					queuedItem := itemList[childState]
-					if queuedItem.priority < childItem.priority {
-						heap.Remove(&pq, queuedItem.index)
-						delete(explored, childState)
-						delete(queued, childState)
-						delete(itemList, childState)
-					}
+
+			if queuedItem, q := queued[childState]; q {
+				if queuedItem.priority < childItem.priority {
+					heap.Remove(&pq, queuedItem.index)
+					delete(explored, childState)
+					delete(queued, childState)
 				}
+			}
+			if _, e := explored[childState]; !e {
 				if _, q := queued[childState]; !q {
 					heap.Push(&pq, childItem)
-					queued[childState] = true
-					itemList[childState] = childItem
+					queued[childState] = childItem
 				}
 			}
 		}
