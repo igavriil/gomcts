@@ -10,6 +10,10 @@ func (t Tile) ManhattanDistance(g Tile) int {
 	return Abs(t.i-g.i) + Abs(t.j-g.j)
 }
 
+func (t Tile) DiagonalDistance(g Tile) int {
+	return Min(Abs(t.i-g.i), Abs(t.j-g.j))
+}
+
 type BoardAction struct {
 	from Tile
 	to   Tile
@@ -108,5 +112,8 @@ func (b BoardProblem) GoalTest(s State) bool {
 }
 
 func (b BoardProblem) Heuristic(s State) int {
-	return b.GoalTile.ManhattanDistance(s.(Tile))
+	h_stra := b.GoalTile.ManhattanDistance(s.(Tile))
+	h_diag := b.GoalTile.DiagonalDistance(s.(Tile))
+
+	return 1000*h_diag + 1414*(h_stra-2*h_diag)
 }

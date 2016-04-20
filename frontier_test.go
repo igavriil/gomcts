@@ -220,9 +220,9 @@ func TestPriorityQueueLen(t *testing.T) {
 
 func TestPriorityQueueUpdate(t *testing.T) {
 	pq := setupPriorityQueue()
-	expected := Tile{3, 3}
+	expected := Tile{5, 5}
 	item := pq[pq.Len()-1]
-	pq.update(item, item.value, 0)
+	pq.update(item, Tile{5, 5}, 0)
 
 	actual := heap.Pop(&pq).(*Item).value
 	equal := reflect.DeepEqual(actual, expected)

@@ -27,19 +27,19 @@ func UninformedSearch(g Graph, f Frontier) *GraphNode {
 
 	for f.Len() > 0 {
 		node = f.Pop().(*GraphNode)
-		state = (*node).State
+		state = node.State
 		explored[state] = true
 		for _, action := range g.Actions(state) {
 			childNode := node.ChildNode(g, action)
-			state = (*childNode).State
+			childState := childNode.State
 
-			if e, _ := explored[state]; !e {
-				if q, _ := queued[state]; !q {
-					if g.GoalTest(state) {
+			if _, e := explored[childState]; !e {
+				if _, q := queued[childState]; !q {
+					if g.GoalTest(childState) {
 						return childNode
 					}
 					f.Push(childNode)
-					queued[state] = true
+					queued[childState] = true
 				}
 			}
 		}
@@ -59,27 +59,45 @@ func AstarSearch(g ProblemSpecificGraph, pq PriorityQueue) *GraphNode {
 	}
 	heap.Push(&pq, item)
 	explored := make(map[State]bool)
+	itemList := make(map[State]*Item)
 	queued := make(map[State]bool)
 
+	queued[state] = true
+	itemList[state] = item
+
 	for pq.Len() > 0 {
-		node = heap.Pop(&pq).(*Item).value.(*GraphNode)
-		state = (*node).State
+		item := heap.Pop(&pq).(*Item)
+		node = item.value.(*GraphNode)
+		state = node.State
+
 		explored[state] = true
+		delete(queued, state)
+		delete(itemList, state)
 		for _, action := range g.Actions(state) {
 			childNode := node.ChildNode(g, action)
-			state = (*childNode).State
+			childState := childNode.State
+			if g.GoalTest(childState) {
+				return childNode
+			}
 
-			if e, _ := explored[state]; !e {
-				if q, _ := queued[state]; !q {
-					if g.GoalTest(state) {
-						return childNode
+			childItem := &Item{
+				value:    childNode,
+				priority: childNode.PathCost + g.Heuristic(childState),
+			}
+			if _, e := explored[childState]; !e {
+				if _, q := queued[childState]; q {
+					queuedItem := itemList[childState]
+					if queuedItem.priority < childItem.priority {
+						heap.Remove(&pq, queuedItem.index)
+						delete(explored, childState)
+						delete(queued, childState)
+						delete(itemList, childState)
 					}
-					childItem := &Item{
-						value:    childNode,
-						priority: childNode.PathCost + g.Heuristic(childNode.State),
-					}
+				}
+				if _, q := queued[childState]; !q {
 					heap.Push(&pq, childItem)
-					queued[state] = true
+					queued[childState] = true
+					itemList[childState] = childItem
 				}
 			}
 		}
