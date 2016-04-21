@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type Tile struct {
 	i, j int
@@ -14,6 +17,14 @@ func (t Tile) DiagonalDistance(g Tile) int {
 	return Min(Abs(t.i-g.i), Abs(t.j-g.j))
 }
 
+func (t Tile) CrossProductDistance(s Tile, g Tile) int {
+	dx1 := t.i - g.i
+	dy1 := t.j - g.j
+	dx2 := s.i - g.i
+	dy2 := s.j - g.j
+	return Abs(dx1*dy2 - dx2*dy1)
+}
+
 type BoardAction struct {
 	from Tile
 	to   Tile
@@ -24,7 +35,7 @@ type Board map[Tile]map[Tile]int
 type BoardProblem struct {
 	Board
 	StartTile Tile
-	GoalTile  Tile
+	GoalTiles []Tile
 }
 
 func NewBoard(dimension int) *Board {
@@ -108,12 +119,22 @@ func (b BoardProblem) InitialState() State {
 }
 
 func (b BoardProblem) GoalTest(s State) bool {
-	return b.GoalTile == s.(Tile)
+	for _, goalTile := range b.GoalTiles {
+		if goalTile == s.(Tile) {
+			return true
+		}
+	}
+	return false
 }
 
 func (b BoardProblem) Heuristic(s State) int {
-	h_stra := b.GoalTile.ManhattanDistance(s.(Tile))
-	h_diag := b.GoalTile.DiagonalDistance(s.(Tile))
-
-	return 1000*h_diag + 1414*(h_stra-2*h_diag)
+	min := math.MaxInt64
+	for _, goalTile := range b.GoalTiles {
+		straightDistance := s.(Tile).ManhattanDistance(goalTile)
+		diagonalDistance := s.(Tile).DiagonalDistance(goalTile)
+		heuristicDistance := 1000*diagonalDistance + 1414*(straightDistance-2*diagonalDistance)
+		heuristicDistance += 1000 * s.(Tile).CrossProductDistance(b.StartTile, goalTile)
+		min = Min(min, heuristicDistance)
+	}
+	return min
 }

@@ -5,7 +5,7 @@ import "fmt"
 func main() {
 	// fmt.Println("Hello World")
 	b := *NewBoard(10)
-	p := BoardProblem{b, Tile{0, 0}, Tile{9, 9}}
+	p := BoardProblem{b, Tile{0, 0}, []Tile{Tile{9, 9}, Tile{7, 1}, Tile{0, 9}}}
 	pq := make(PriorityQueue, 0)
 
 	solution := AstarSearch(p, pq)

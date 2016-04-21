@@ -10,12 +10,12 @@ func TestBfs(t *testing.T) {
 	p := BoardProblem{
 		Board:     b,
 		StartTile: Tile{0, 0},
-		GoalTile:  Tile{2, 2},
+		GoalTiles: []Tile{Tile{2, 2}},
 	}
 	f := Queue{}
 	solution := UninformedSearch(p, &f)
 
-	if solution.State != p.GoalTile {
+	if solution.State != p.GoalTiles[0] {
 		t.Error(
 			"expected to found solution",
 		)
@@ -49,12 +49,12 @@ func TestDfs(t *testing.T) {
 	p := BoardProblem{
 		Board:     b,
 		StartTile: Tile{0, 0},
-		GoalTile:  Tile{2, 2},
+		GoalTiles: []Tile{Tile{2, 2}},
 	}
 	f := Stack{}
 	solution := UninformedSearch(p, &f)
 
-	if solution.State != p.GoalTile {
+	if solution.State != p.GoalTiles[0] {
 		t.Error(
 			"expected to found solution",
 		)
@@ -88,12 +88,12 @@ func TestUninformedTrivialSolution(t *testing.T) {
 	p := BoardProblem{
 		Board:     b,
 		StartTile: Tile{2, 2},
-		GoalTile:  Tile{2, 2},
+		GoalTiles: []Tile{Tile{2, 2}},
 	}
 	f := Stack{}
 	solution := UninformedSearch(p, &f)
 
-	if solution.State != p.GoalTile {
+	if solution.State != p.GoalTiles[0] {
 		t.Error(
 			"expected to found solution",
 		)
@@ -115,12 +115,12 @@ func TestAstar(t *testing.T) {
 	p := BoardProblem{
 		Board:     b,
 		StartTile: Tile{0, 0},
-		GoalTile:  Tile{4, 4},
+		GoalTiles: []Tile{Tile{4, 4}},
 	}
 	pq := make(PriorityQueue, 0)
 	solution := AstarSearch(p, pq)
 
-	if solution.State != p.GoalTile {
+	if solution.State != p.GoalTiles[0] {
 		t.Error(
 			"expected to found solution",
 		)
@@ -154,12 +154,12 @@ func TestAstarTrivialSolution(t *testing.T) {
 	p := BoardProblem{
 		Board:     b,
 		StartTile: Tile{2, 2},
-		GoalTile:  Tile{2, 2},
+		GoalTiles: []Tile{Tile{2, 2}},
 	}
 	pq := make(PriorityQueue, 0)
 	solution := AstarSearch(p, pq)
 
-	if solution.State != p.GoalTile {
+	if solution.State != p.GoalTiles[0] {
 		t.Error(
 			"expected to found solution",
 		)
